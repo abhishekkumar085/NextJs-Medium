@@ -1,7 +1,10 @@
+"use client"
+import { useDialog } from "@/hooks/useDialog";
 import Image from "next/image";
 import React from "react";
 
 const Hero = () => {
+    const { setOpenDialog } = useDialog();
     return (
         <div className=" w-full flex flex-row text-[#242424] ">
             <div className="w-[70%] container max-w-screen-lg mx-auto">
@@ -15,7 +18,7 @@ const Hero = () => {
 
                         <div className="pt-12 ">
 
-                            <button className="border rounded-full px-8 py-3 bg-black text-white">
+                            <button onClick={() => setOpenDialog(true)} className="border rounded-full px-8 py-3 bg-black text-white cursor-pointer">
                                 Start Reading
                             </button>
                         </div>

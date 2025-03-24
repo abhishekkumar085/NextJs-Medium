@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { DailogProvider } from "@/context/dialogContext";
+import DialogAPP from "@/components/Dialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,11 +26,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <DailogProvider>
+
+          {children}
+          <DialogAPP />
+        </DailogProvider>
       </body>
+
     </html>
   );
 }
