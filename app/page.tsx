@@ -1,10 +1,14 @@
+import Footer from '@/components/Footer'
+import Hero from '@/components/Hero'
 import Navbar from '@/components/Navbar'
 import React from 'react'
 
 const page = () => {
   return (
-    <div className='h-screen bg-[#f7f4ed]'>
+    <div className=' bg-[#f7f4ed]'>
       <Navbar />
+      <Hero />
+      <Footer />
     </div>
   )
 }
