@@ -22,7 +22,26 @@ const DialogAPP = () => {
         try {
             const response = await signInWithPopup(auth, googleProvider);
             const user = response.user;
-            console.log("User Info:", user);
+            const token = await user.getIdToken();
+            console.log("TOKEN", token)
+            // console.log("User Info:", user);
+
+            const res = await fetch("/api/auth", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Login Failed: ${errorText}`);
+            }
+
+            const userData = await res.json();
+            console.log("User Data:", userData);
+
         } catch (error) {
             console.log("LoginFailed", error);
         }
