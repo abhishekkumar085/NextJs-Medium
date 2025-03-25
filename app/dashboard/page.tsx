@@ -4,11 +4,33 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDialog } from "@/hooks/useDialog";
 import { Bell, BellRing, LogOut, Search, SquarePen, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Dashboard = () => {
+    const router = useRouter();
     const { user, logout } = useAuth();
     const { setOpenDialog } = useDialog();
+
+
+    const redirectNotificationPage = () => {
+        if (!user) {
+            setOpenDialog(true)
+        } else {
+            router.push('/notification')
+        }
+    }
+
+    const redirectNewStoryPage = () => {
+        if (!user) {
+            setOpenDialog(true)
+        } else {
+
+            router.push('/new-story')
+        }
+    }
+
 
     console.log("DashboardUSer", user);
     console.log("DashboardUSer", user?.photoURL);
@@ -30,7 +52,7 @@ const Dashboard = () => {
             </div>
 
             <div className="flex  flex-row space-x-8">
-                <div className="flex items-center space-x-2 cursor-pointer">
+                <div onClick={redirectNewStoryPage} className="flex items-center space-x-2 cursor-pointer">
                     <SquarePen className="w-5 h-5 text-gray-500" />
                     <span>Write</span>
                 </div>
@@ -42,7 +64,7 @@ const Dashboard = () => {
                     <button onClick={() => setOpenDialog(true)}>Sign in</button>
                 </div>}
                 <div className="flex items-center space-x-2 cursor-pointer">
-                    <Bell className="w-5 h-5 text-gray-500" />
+                    <Bell onClick={redirectNotificationPage} className="w-5 h-5 text-gray-500" />
                 </div>
 
                 <DropdownMenu>
