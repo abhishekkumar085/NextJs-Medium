@@ -5,6 +5,8 @@ interface IPost extends Document {
   name: string;
   email: string;
   profilePic: string;
+  followers: mongoose.Types.ObjectId[];
+  following: mongoose.Types.ObjectId[];
 }
 const userSchema = new mongoose.Schema<IPost>(
   {
@@ -24,6 +26,18 @@ const userSchema = new mongoose.Schema<IPost>(
       type: String,
       required: true,
     },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   { timestamps: true }
 );
