@@ -1,5 +1,6 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import Comment from '@/models/comments';
+import Like from '@/models/likes';
 import { NextRequest, NextResponse } from 'next/server';
 
 connectToDatabase();
@@ -16,31 +17,15 @@ export async function GET(
         { status: 400 }
       );
     }
-    const comments = await Comment.find({
-      post: id,
-      parentComment: null,
-    })
-      .populate('post')
-      .populate('user')
-      .populate({
-        path: 'replies',
-        populate: { path: 'user' },
-      });
-    if (!comments)
-      return NextResponse.json(
-        { error: 'Comments not found' },
-        { status: 404 }
-      );
+
+    const postLikes = await Like.countDocuments({ post: id });
+
     return NextResponse.json(
-      {
-        success: true,
-        message: 'Comment Getting successfully',
-        data: comments,
-      },
+      { success: true, data: postLikes },
       { status: 200 }
     );
   } catch (error) {
-    console.log('Error while getting posts', error);
+    console.log('Error while getting Likes', error);
     return NextResponse.json(
       { success: false, message: 'Internal Server Error', error },
       { status: 500 }
