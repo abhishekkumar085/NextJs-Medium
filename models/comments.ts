@@ -2,7 +2,11 @@ import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema(
   {
-    post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true },
+    post: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Story',
+      required: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -12,7 +16,6 @@ const commentSchema = new mongoose.Schema(
     parentComment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Comment',
-      default: null,
     },
     replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
@@ -20,5 +23,7 @@ const commentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Comment = mongoose.model('Comment', commentSchema);
+// const Comment = mongoose.model('Comment', commentSchema);
+const Comment =
+  mongoose.models.Comment || mongoose.model('Comment', commentSchema);
 export default Comment;
