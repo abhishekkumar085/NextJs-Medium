@@ -1,6 +1,6 @@
 import { auth } from '@/firebase/firebaseAdmin';
 import { connectToDatabase } from '@/lib/mongodb';
-import User from '@/models/User';
+import User from '@/models/user';
 
 import { NextRequest, NextResponse } from 'next/server';
 
