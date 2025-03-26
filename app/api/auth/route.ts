@@ -4,8 +4,9 @@ import User from '@/models/User';
 
 import { NextRequest, NextResponse } from 'next/server';
 
+connectToDatabase();
+
 export async function POST(req: NextRequest) {
-  await connectToDatabase();
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -40,7 +41,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  await connectToDatabase();
   const response = await User.find();
   return NextResponse.json(
     {
