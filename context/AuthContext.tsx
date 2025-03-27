@@ -8,6 +8,7 @@ export interface AuthContext {
     user: User | null;
     loading: boolean;
     logout: () => Promise<void>;
+    getUserId: () => Promise<void>;
 
 }
 
@@ -15,6 +16,7 @@ export const AuthContext = createContext<AuthContext>({
     user: null,
     loading: true,
     logout: async () => Promise.resolve(),
+    getUserId: async () => Promise.resolve(),
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -36,8 +38,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
     };
 
+    const getUserId = async () => {
+        const response = await fetch('/api/user', {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json();
+        console.log("DATAGETUSERID", data)
+        return data;
+    }
+
     return (
-        <AuthContext.Provider value={{ user, loading, logout }}>
+        <AuthContext.Provider value={{ user, loading, logout, getUserId }}>
             {children}
         </AuthContext.Provider>
     )

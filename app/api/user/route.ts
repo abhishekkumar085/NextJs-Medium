@@ -61,7 +61,8 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      response,
+      message: 'user getting successfully!',
+      data: response,
     },
     { status: 200 }
   );

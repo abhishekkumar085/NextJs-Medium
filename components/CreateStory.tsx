@@ -7,7 +7,7 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 const CreateStory = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-
+    const { getUserId } = useAuth();
     const handleSubmit = async () => {
         // const response = await fetch("/api/stories", {
         //     method: "POST",
@@ -21,7 +21,13 @@ const CreateStory = () => {
         //     alert("Failed to save story.");
         // }
 
-        console.log("submitted")
+
+
+        const { data } = await getUserId();
+
+        console.log("DATAUSERID", data[0]?._id)
+
+
 
         console.log("TITLE", title)
         console.log("DESC", content)
