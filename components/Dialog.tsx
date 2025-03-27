@@ -13,10 +13,14 @@ import { useDialog } from "@/hooks/useDialog";
 import { signInWithPopup } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const DialogAPP = () => {
+    const router = useRouter(); // Initialize Next.js router
 
     const { openDialog, setOpenDialog } = useDialog();
+
 
     const handleGoogleLogin = async () => {
         try {
@@ -38,6 +42,8 @@ const DialogAPP = () => {
                 const errorText = await res.text();
                 throw new Error(`Login Failed: ${errorText}`);
             }
+            setOpenDialog(false);
+            router.push("/dashboard");
 
             const userData = await res.json();
             console.log("User Data:", userData);

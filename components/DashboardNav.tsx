@@ -1,4 +1,5 @@
 "use client"
+import React from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import { useDialog } from "@/hooks/useDialog";
@@ -6,9 +7,7 @@ import { Bell, BellRing, LogOut, Search, SquarePen, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
-
-const Dashboard = () => {
+const DashboardNav = () => {
     const router = useRouter();
     const { user, logout } = useAuth();
     const { setOpenDialog } = useDialog();
@@ -98,4 +97,4 @@ const Dashboard = () => {
     )
 };
 
-export default Dashboard;
+export default DashboardNav;

@@ -3,10 +3,10 @@ import { connectToDatabase } from '@/lib/mongodb';
 import User from '@/models/user';
 
 import { NextRequest, NextResponse } from 'next/server';
-
-connectToDatabase();
+import { serialize } from 'cookie';
 
 export async function POST(req: NextRequest) {
+  await connectToDatabase();
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -25,15 +25,30 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       // Create new user
-      user = await User.create({
+      user = new User({
         firebaseUid: uid,
         email,
         name,
         profilePic: picture,
       });
+      await user.save();
     }
 
-    return NextResponse.json({ user }, { status: 201 });
+    // set HTTP-Only Cookie with auth token
+
+    const cookie = serialize('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+    });
+
+    // return NextResponse.json({ user }, { status: 201 });
+    return new NextResponse(JSON.stringify({ success: true, user }), {
+      status: 200,
+      headers: { 'Set-Cookie': cookie },
+    });
   } catch (error) {
     console.error('Token verification failed:', error);
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
@@ -41,6 +56,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  await connectToDatabase();
   const response = await User.find();
   return NextResponse.json(
     {
