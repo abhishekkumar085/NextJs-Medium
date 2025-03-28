@@ -4,6 +4,8 @@ import "./globals.css";
 import { DailogProvider } from "@/context/dialogContext";
 import DialogAPP from "@/components/Dialog";
 import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "@/components/ui/sonner";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +38,7 @@ export default function RootLayout({
           <DailogProvider>
             {children}
             <DialogAPP />
+            <Toaster />
           </DailogProvider>
         </AuthProvider>
       </body>
