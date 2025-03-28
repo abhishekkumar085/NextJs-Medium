@@ -34,7 +34,7 @@ const DashboardNav = () => {
     console.log("DashboardUSer", user);
     console.log("DashboardUSer", user?.photoURL);
     return (
-        <div className="flex  flex-row items-center px-8 justify-between h-14 border-b border-gray-200">
+        <div className="flex  flex-row items-center px-8 justify-between h-14 border-b border-gray-200 sticky top-0 left-0  w-full z-[999] bg-white">
             <div className="flex  flex-row space-x-4">
 
                 <div>

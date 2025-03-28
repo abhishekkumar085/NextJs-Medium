@@ -56,27 +56,39 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const posts = await Story.find();
-    const countPost = await Story.countDocuments({});
-    console.log('Total Posts', countPost);
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '10', 10);
+    const skip = (page - 1) * limit;
+
+    const posts = await Story.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    const countPost = await Story.countDocuments();
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Post Getting Successfully!',
+        message: 'Posts retrieved successfully!',
         data: posts,
         count: countPost,
+        currentPage: page,
+        totalPages: Math.ceil(countPost / limit),
       },
       { status: 200 }
     );
   } catch (error) {
-    console.log('Error getting POST', error);
-    return NextResponse.json({
-      success: false,
-      message: 'Something went wrong!',
-      error: error,
-    });
+    console.error('Error getting posts', error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Something went wrong!',
+        error: (error as Error).message,
+      },
+      { status: 500 }
+    );
   }
 }
