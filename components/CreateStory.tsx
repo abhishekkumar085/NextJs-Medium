@@ -58,7 +58,6 @@ const CreateStory = () => {
     return (
         <div className="container mx-auto w-full lg:max-w-5xl  p-6">
             <div className="flex flex-col space-y-6">
-                {/* Title Input */}
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit();
@@ -79,7 +78,6 @@ const CreateStory = () => {
                         />
                     </div>
 
-                    {/* Quill Editor (Client-side only) */}
                     <div className="w-full">
                         <label className="text-3xl">Description</label>
                         <ReactQuill
@@ -91,7 +89,6 @@ const CreateStory = () => {
                         />
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={loading}

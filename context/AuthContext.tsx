@@ -2,6 +2,7 @@
 
 import { auth } from "@/firebase/firebaseConfig";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import { createContext, ReactNode, useEffect, useState } from "react"
 
 export interface AuthContext {
@@ -22,6 +23,7 @@ export const AuthContext = createContext<AuthContext>({
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState<string | null>(null);
@@ -45,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = async () => {
         await signOut(auth);
         setUser(null);
+        router.push("/")
     };
 
     const getUserId = async () => {

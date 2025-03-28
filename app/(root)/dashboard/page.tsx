@@ -1,9 +1,10 @@
+import Post from "@/components/Post";
 import React from "react";
 
 const page = () => {
     return (
         <div>
-            Dashboard
+            <Post />
         </div>
     )
 };
