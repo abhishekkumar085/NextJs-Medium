@@ -7,21 +7,27 @@ import { createContext, ReactNode, useEffect, useState } from "react"
 export interface AuthContext {
     user: User | null;
     loading: boolean;
+    userId: string | null;
     logout: () => Promise<void>;
-    getUserId: () => Promise<void>;
+    getUserId: () => Promise<string | null>;
 
 }
 
 export const AuthContext = createContext<AuthContext>({
     user: null,
     loading: true,
+    userId: null,
     logout: async () => Promise.resolve(),
-    getUserId: async () => Promise.resolve(),
+    getUserId: async () => Promise.resolve(null),
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [userId, setUserId] = useState<string | null>(null);
+
+
+    console.log("USERId", userId)
 
 
     useEffect(() => {
@@ -29,6 +35,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(user);
             setLoading(false);
         });
+
+        getUserId();
+
 
         return () => unsubscribe();
     }, []);
@@ -45,12 +54,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         });
 
         const data = await response.json();
-        console.log("DATAGETUSERID", data)
+        setUserId(data?.data[0]?._id);
         return data;
     }
 
     return (
-        <AuthContext.Provider value={{ user, loading, logout, getUserId }}>
+        <AuthContext.Provider value={{ user, userId, loading, logout, getUserId }}>
             {children}
         </AuthContext.Provider>
     )

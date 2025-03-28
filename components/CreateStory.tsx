@@ -7,7 +7,9 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 const CreateStory = () => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const { getUserId } = useAuth();
+
+    const { userId } = useAuth();
+    console.log("Create STORY", userId)
     const handleSubmit = async () => {
         // const response = await fetch("/api/stories", {
         //     method: "POST",
@@ -23,9 +25,6 @@ const CreateStory = () => {
 
 
 
-        const { data } = await getUserId();
-
-        console.log("DATAUSERID", data[0]?._id)
 
 
 
