@@ -38,7 +38,7 @@ const DashboardNav = () => {
             <div className="flex  flex-row space-x-4">
 
                 <div>
-                    <h1 className="text-3xl font-bold ">Medium</h1>
+                    <h1 className="text-3xl font-bold cursor-pointer " onClick={() => router.push("/dashboard")}>Medium</h1>
                 </div>
                 <div className="relative flex items-center gap-2 bg-[#f9f9f9] rounded-full px-4 py-2">
                     <Search className="w-5 h-5 text-gray-500" />
