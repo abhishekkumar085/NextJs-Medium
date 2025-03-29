@@ -20,11 +20,13 @@ export async function GET(
       post: id,
       parentComment: null,
     })
+      .sort({ createdAt: -1 })
       .populate('post')
-      .populate('user')
+      .populate('user', 'name')
       .populate({
         path: 'replies',
-        populate: { path: 'user' },
+        options: { sort: { createdAt: -1 } },
+        populate: { path: 'user', select: 'name' },
       });
     if (!comments)
       return NextResponse.json(

@@ -1,41 +1,15 @@
-// "use client";
-// import { useGetpostById } from "@/hooks/Apis/useGetpostById";
-// import DOMPurify from "dompurify";
-// import { LucideLoader2 } from "lucide-react";
-// import Link from "next/link";
-
-// export const GetPostById = ({ id }: { id: string }) => {
-//     const { post, loading } = useGetpostById(id);
-
-//     if (loading) return (
-//         <div className="flex h-screen items-center justify-center">
-//             <LucideLoader2 className="animate-spin ml-2 text-center" />
-//         </div>
-//     );
-//     if (!post) return <p className="text-center text-red-500">Post not found</p>;
-
-//     return (
-//         <div className="max-w-3xl mx-auto py-10">
-//             <h1 className="text-3xl font-bold">{post.title}</h1>
-//             <p className="text-gray-500">Published on: {post.createdAt ? new Date(post.createdAt).toDateString() : "Unknown"}</p>
-//             <div className="mt-6 border-b pb-6">
-//                 <Link href="/dashboard" className="text-blue-500 hover:underline">← Back to home</Link>
-//             </div>
-//             {/* Render Quill-formatted HTML safely */}
-//             <div className="mt-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.description || "") }} />
-//         </div>
-//     );
-// };
-
 "use client";
 import { useGetpostById } from "@/hooks/Apis/useGetpostById";
 import { useAuth } from "@/hooks/useAuth";
 import DOMPurify from "dompurify";
-import { LucideLoader2, ThumbsUp, MessageCircle } from "lucide-react";
+import { LucideLoader2, ThumbsUp, MessageCircle, MoveLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const GetPostById = ({ id }: { id: string }) => {
+    const router = useRouter();
     const { post, loading } = useGetpostById(id);
 
     const { userId } = useAuth();
@@ -43,11 +17,10 @@ export const GetPostById = ({ id }: { id: string }) => {
     const [likes, setLikes] = useState(false);
     const [comments, setComments] = useState<{ _id: string; content: string }[]>([]);
     const [commentText, setCommentText] = useState("");
+    const [showAllComments, setShowAllComments] = useState(false);
 
     useEffect(() => {
-
         fetchPostComments();
-
     }, [])
 
     useEffect(() => {
@@ -85,8 +58,6 @@ export const GetPostById = ({ id }: { id: string }) => {
         }
     }
 
-
-
     // Handle Like
     const handlePostLike = async () => {
         try {
@@ -109,6 +80,9 @@ export const GetPostById = ({ id }: { id: string }) => {
 
 
     const handleCommentSubmit = async () => {
+        if (commentText == '') {
+            toast.error("Comment Required")
+        }
         if (!commentText.trim()) return;
         try {
             const res = await fetch(`/api/comment`, {
@@ -117,8 +91,14 @@ export const GetPostById = ({ id }: { id: string }) => {
                 body: JSON.stringify({ content: commentText, post: id, user: userId }),
             });
             const data = await res.json();
-            // console.log("COMMENTS DATA", data.data)
-            // setComments(data?.data)
+            console.log("COMMENTS DATA", data.data)
+
+            if (res.ok) {
+                setCommentText('')
+                router.refresh();
+                await fetchPostComments();
+            }
+
 
         } catch (error) {
             console.error("Error adding comment", error);
@@ -138,7 +118,9 @@ export const GetPostById = ({ id }: { id: string }) => {
             <h1 className="text-3xl font-bold">{post.title}</h1>
             <p className="text-gray-500">Published on: {post.createdAt ? new Date(post.createdAt).toDateString() : "Unknown"}</p>
             <div className="mt-6 border-b pb-6">
-                <Link href="/dashboard" className="text-blue-500 hover:underline">← Back to home</Link>
+                <Link href="/dashboard" className=" flex flex-row items-center gap-2 text-blue-500 hover:underline font-semibold text-lg">
+                    <MoveLeft /> Back to home
+                </Link>
             </div>
 
             {/* Render Quill-formatted HTML safely */}
@@ -147,7 +129,7 @@ export const GetPostById = ({ id }: { id: string }) => {
             {/* Like & Comment Section */}
             <div className="mt-8 flex items-center space-x-6">
                 <button onClick={handlePostLike} className="flex items-center space-x-2 text-gray-600 hover:text-pink-500">
-                    <ThumbsUp className={`w-5 h-5 ${likes ? "fill-pink-500 text-pink-500" : "text-pink-500"}`} />
+                    <ThumbsUp className={`w-5 h-5 ${likes ? "fill-pink-500 text-pink-500" : "text-gray-500"}`} />
 
                 </button>
                 <button className="flex items-center space-x-2 text-gray-600">
@@ -165,20 +147,39 @@ export const GetPostById = ({ id }: { id: string }) => {
                 />
                 <button
                     onClick={handleCommentSubmit}
-                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="mt-2 px-4 py-2 bg-blue-500 text-white cursor-pointer rounded-lg hover:bg-blue-600"
                 >
                     Post Comment
                 </button>
             </div>
 
             {/* Comment List */}
-            <div className="mt-6 space-y-4">
+            {/* <div className="mt-6 space-y-4">
                 {comments.map((comment) => (
                     <div key={comment._id} className="border p-3 rounded-lg">
                         <p className="text-gray-800">{comment.content}</p>
                         <button className="text-blue-500 mt-2 text-sm">Reply</button>
                     </div>
                 ))}
+            </div> */}
+
+            <div className="mt-6 space-y-4">
+                {(showAllComments ? comments : comments.slice(0, 3)).map((comment) => (
+                    <div key={comment._id} className="border p-3 rounded-lg">
+                        <p className="text-gray-800">{comment.content}</p>
+                        <button className="text-blue-500 mt-2 text-sm">Reply</button>
+                    </div>
+                ))}
+
+                {/* See More Button */}
+                {comments.length > 3 && !showAllComments && (
+                    <button
+                        onClick={() => setShowAllComments(true)}
+                        className="text-blue-500 hover:underline mt-4 block text-sm"
+                    >
+                        See More Comments
+                    </button>
+                )}
             </div>
         </div>
     );
