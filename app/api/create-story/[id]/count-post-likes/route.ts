@@ -1,5 +1,4 @@
 import { connectToDatabase } from '@/lib/mongodb';
-import Comment from '@/models/comments';
 import Like from '@/models/likes';
 import { NextRequest, NextResponse } from 'next/server';
 

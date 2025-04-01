@@ -1,7 +1,7 @@
 import Post from "@/components/Post";
 import React from "react";
 
-const page = () => {
+const Page = () => {
     return (
         <div>
             <Post />
@@ -9,4 +9,4 @@ const page = () => {
     )
 };
 
-export default page;
+export default Page;

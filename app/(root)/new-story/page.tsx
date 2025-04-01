@@ -2,7 +2,7 @@
 import CreateStory from '@/components/CreateStory'
 import React from 'react'
 
-const page = () => {
+const Page = () => {
     return (
         <div>
             <CreateStory />
@@ -10,4 +10,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
